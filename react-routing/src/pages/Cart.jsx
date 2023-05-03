@@ -1,19 +1,21 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../redux/features/products-slice";
-import { addToCart } from "../redux/features/cart-slice";
+import { removeFromCart } from "../redux/features/cart-slice";
 
-export default function Shop() {
+const Cart = () => {
   const dispatch = useDispatch();
-  const { products } = useSelector((state) => state.products);
+  const { cartItems } = useSelector((state) => state.cart);
 
-  useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
-
+  if (cartItems?.length < 1) {
+    return (
+      <div>
+        <p>No cart items</p>
+      </div>
+    );
+  }
   return (
     <div className=" w-full px-[60px] py-[40px] grid grid-cols-4 gap-4">
-      {products?.map((item) => {
+      {cartItems?.map((item) => {
         return (
           <div
             key={item?.id}
@@ -31,9 +33,9 @@ export default function Shop() {
             <div>
               <button
                 className=" py-1 px-8 bg-purple-500 text-white rounded-sm"
-                onClick={() => dispatch(addToCart(item))}
+                onClick={() => dispatch(removeFromCart(item?.id))}
               >
-                Add to cart
+                Delete Product
               </button>
             </div>
           </div>
@@ -41,4 +43,6 @@ export default function Shop() {
       })}
     </div>
   );
-}
+};
+
+export default Cart;
